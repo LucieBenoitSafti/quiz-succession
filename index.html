@@ -30,6 +30,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             position: relative;
+            margin: 20px 0;
         }
 
         .progress-bar {
@@ -251,6 +252,32 @@
             top: 8px;
         }
 
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         @media (max-width: 768px) {
             .content {
                 padding: 25px;
@@ -270,37 +297,6 @@
         }
     </style>
 </head>
-    <script>
-// Configuration backend
-const BACKEND_URL = 'https://quiz-succession-backend.onrender.com';
-
-// Exemple : quand utilisateur soumet le quiz
-function submitQuizResults(results) {
-  // results = { nom: "Lucie", email: "test@test.com", score: 8, reponses: [...] }
-  
-  fetch(`${BACKEND_URL}/submit-quiz`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(results)
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('✅ Merci ! Vos résultats sont sauvegardés.');
-    } else {
-      alert('❌ Erreur, réessayez.');
-    }
-  })
-  .catch(error => {
-    console.error('Erreur:', error);
-    alert('❌ Problème connexion, réessayez.');
-  });
-}
-
-// À adapter à ton bouton de soumission existant
-// Ex: document.getElementById('submit-btn').addEventListener('click', submitQuizResults);
-</script>
-
 <body>
     <div class="container">
         <div class="progress-bar">
@@ -324,7 +320,7 @@ function submitQuizResults(results) {
                 </div>
                 
                 <p style="color: #e67e22; font-weight: 500; margin: 20px 0;"><strong>⚠️ Répondez en toute sincérité : vos réponses resteront confidentielles.</strong></p>
-                <button class="btn" onclick="startQuiz()">Commencer le quiz (2 minutes)</button>
+                <button class="btn" id="startBtn">Commencer le quiz (2 minutes)</button>
             </div>
 
             <!-- Questions du quiz -->
@@ -332,150 +328,102 @@ function submitQuizResults(results) {
                 <div class="question-counter">Question 1 / 7</div>
                 <h2 class="question-text">Quand vous pensez à ce bien hérité, quel sentiment domine ?</h2>
                 <div class="options">
-                    <div class="option" data-value="attachment" onclick="selectOption(this, 1)">
-                        💝 Attachement affectif
-                    </div>
-                    <div class="option" data-value="stress" onclick="selectOption(this, 1)">
-                        😰 Stress lié aux démarches
-                    </div>
-                    <div class="option" data-value="relief" onclick="selectOption(this, 1)">
-                        😌 Soulagement à l'idée de tourner la page
-                    </div>
+                    <div class="option" data-value="attachment">💝 Attachement affectif</div>
+                    <div class="option" data-value="stress">😰 Stress lié aux démarches</div>
+                    <div class="option" data-value="relief">😌 Soulagement à l'idée de tourner la page</div>
                 </div>
-                <button class="btn" id="next1" onclick="nextQuestion(1)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="1" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question2">
                 <div class="question-counter">Question 2 / 7</div>
                 <h2 class="question-text">Combien d'héritiers sont impliqués dans cette succession ?</h2>
                 <div class="options">
-                    <div class="option" data-value="alone" onclick="selectOption(this, 2)">
-                        👤 Je suis seul(e)
-                    </div>
-                    <div class="option" data-value="agreement" onclick="selectOption(this, 2)">
-                        👥 Nous sommes plusieurs mais en accord
-                    </div>
-                    <div class="option" data-value="disagreement" onclick="selectOption(this, 2)">
-                        ⚡ Nous sommes plusieurs et il y a des désaccords
-                    </div>
+                    <div class="option" data-value="alone">👤 Je suis seul(e)</div>
+                    <div class="option" data-value="agreement">🤝 Plusieurs, en plein accord</div>
+                    <div class="option" data-value="disagreement">⚖️ Plusieurs, avec des avis divergents</div>
                 </div>
-                <button class="btn" id="next2" onclick="nextQuestion(2)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="2" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question3">
                 <div class="question-counter">Question 3 / 7</div>
-                <h2 class="question-text">Le bien est actuellement :</h2>
+                <h2 class="question-text">Quel est l'état actuel du bien ?</h2>
                 <div class="options">
-                    <div class="option" data-value="inhabited" onclick="selectOption(this, 3)">
-                        🏡 Habité par un héritier
-                    </div>
-                    <div class="option" data-value="maintained" onclick="selectOption(this, 3)">
-                        🧹 Vide mais entretenu
-                    </div>
-                    <div class="option" data-value="expensive" onclick="selectOption(this, 3)">
-                        💸 Vide et coûte cher en entretien/taxes
-                    </div>
-                    <div class="option" data-value="rented" onclick="selectOption(this, 3)">
-                        🏠 Loué
-                    </div>
+                    <div class="option" data-value="good">✨ Prêt à habiter / Très bon état</div>
+                    <div class="option" data-value="refresh">🎨 Rafraîchissement nécessaire</div>
+                    <div class="option" data-value="renovate">🛠️ Gros travaux à prévoir</div>
                 </div>
-                <button class="btn" id="next3" onclick="nextQuestion(3)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="3" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question4">
                 <div class="question-counter">Question 4 / 7</div>
-                <h2 class="question-text">Avez-vous déjà échangé avec vos proches sur la possibilité de vendre ?</h2>
+                <h2 class="question-text">Avez-vous déjà discuté de l'avenir du bien avec les autres héritiers ?</h2>
                 <div class="options">
-                    <div class="option" data-value="agreed" onclick="selectOption(this, 4)">
-                        ✅ Oui, et tout le monde est d'accord
-                    </div>
-                    <div class="option" data-value="divergent" onclick="selectOption(this, 4)">
-                        🤔 Oui, mais il y a des divergences
-                    </div>
-                    <div class="option" data-value="notyet" onclick="selectOption(this, 4)">
-                        ❓ Pas encore
-                    </div>
+                    <div class="option" data-value="yes_clear">✅ Oui, tout est clair</div>
+                    <div class="option" data-value="yes_vague">🤔 Oui, mais c'est encore flou</div>
+                    <div class="option" data-value="no">❌ Non, pas encore</div>
+                    <div class="option" data-value="divergent">⚠️ Oui, et nous ne sommes pas d'accord</div>
                 </div>
-                <button class="btn" id="next4" onclick="nextQuestion(4)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="4" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question5">
                 <div class="question-counter">Question 5 / 7</div>
-                <h2 class="question-text">Dans quel délai aimeriez-vous que cette situation trouve une issue ?</h2>
+                <h2 class="question-text">Quel est votre horizon de temps souhaité pour régler la situation ?</h2>
                 <div class="options">
-                    <div class="option" data-value="quickly" onclick="selectOption(this, 5)">
-                        ⚡ Rapidement (1 à 3 mois)
-                    </div>
-                    <div class="option" data-value="months" onclick="selectOption(this, 5)">
-                        📅 D'ici quelques mois
-                    </div>
-                    <div class="option" data-value="nohurry" onclick="selectOption(this, 5)">
-                        🕐 Pas d'urgence
-                    </div>
+                    <div class="option" data-value="quickly">⚡ Le plus vite possible</div>
+                    <div class="option" data-value="months">📅 Dans les 6 prochains mois</div>
+                    <div class="option" data-value="nohurry">🐢 Je n'ai aucune urgence</div>
                 </div>
-                <button class="btn" id="next5" onclick="nextQuestion(5)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="5" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question6">
                 <div class="question-counter">Question 6 / 7</div>
-                <h2 class="question-text">Selon vous, quel est le plus gros obstacle aujourd'hui ?</h2>
+                <h2 class="question-text">Quel est votre principal obstacle aujourd'hui ?</h2>
                 <div class="options">
-                    <div class="option" data-value="emotional" onclick="selectOption(this, 6)">
-                        💔 L'attachement émotionnel
-                    </div>
-                    <div class="option" data-value="administrative" onclick="selectOption(this, 6)">
-                        📋 Les démarches administratives/juridiques
-                    </div>
-                    <div class="option" data-value="disagreement" onclick="selectOption(this, 6)">
-                        👥 Le manque d'accord entre héritiers
-                    </div>
-                    <div class="option" data-value="time" onclick="selectOption(this, 6)">
-                        ⏰ Le manque de temps
-                    </div>
+                    <div class="option" data-value="admin">📝 L'administratif et le notaire</div>
+                    <div class="option" data-value="emotional">💔 Le poids émotionnel / vider la maison</div>
+                    <div class="option" data-value="family">👨‍👩‍👧‍👦 Les relations familiales</div>
+                    <div class="option" data-value="value">💰 L'incertitude sur le prix de vente</div>
                 </div>
-                <button class="btn" id="next6" onclick="nextQuestion(6)" disabled>Question suivante</button>
+                <button class="btn next-btn" data-current="6" disabled>Question suivante</button>
             </div>
 
             <div class="page" id="question7">
                 <div class="question-counter">Question 7 / 7</div>
-                <h2 class="question-text">Seriez-vous prêt(e) à échanger gratuitement avec un conseiller pour trouver des solutions adaptées à votre famille ?</h2>
+                <h2 class="question-text">Souhaitez-vous un avis professionnel pour y voir plus clair ?</h2>
                 <div class="options">
-                    <div class="option" data-value="yes" onclick="selectOption(this, 7)">
-                        😊 Oui, avec plaisir
-                    </div>
-                    <div class="option" data-value="maybe" onclick="selectOption(this, 7)">
-                        🤔 Peut-être, j'aimerais en savoir plus
-                    </div>
-                    <div class="option" data-value="no" onclick="selectOption(this, 7)">
-                        🚫 Non, pas pour le moment
-                    </div>
+                    <div class="option" data-value="yes">🙋 Oui, j'en ai besoin</div>
+                    <div class="option" data-value="maybe">🧐 Peut-être plus tard</div>
+                    <div class="option" data-value="no">🙅 Non, je gère seul(e)</div>
                 </div>
-                <button class="btn" id="next7" onclick="nextQuestion(7)" disabled>Voir mes résultats</button>
+                <button class="btn next-btn" data-current="7" disabled>Voir mon bilan</button>
             </div>
 
-            <!-- Formulaire de contact -->
+            <!-- Page de contact -->
             <div class="page" id="contact">
-                <span class="emoji">🙏</span>
-                <h2>Merci pour vos réponses !</h2>
-                <p class="subtitle">Pour recevoir votre bilan personnalisé, merci de renseigner vos coordonnées :</p>
+                <span class="emoji">📧</span>
+                <h2>Où devons-nous vous envoyer votre bilan ?</h2>
+                <p class="subtitle">Complétez ces informations pour recevoir votre analyse personnalisée et vos conseils adaptés.</p>
                 
-                <form id="contactForm" style="text-align: left; max-width: 500px; margin: 0 auto;">
-                    <div style="margin-bottom: 20px;">
-                        <label for="fullName" style="display: block; margin-bottom: 8px; font-weight: 500;">Nom & Prénom *</label>
-                        <input type="text" id="fullName" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="fullName">Nom complet *</label>
+                        <input type="text" id="fullName" required placeholder="Votre nom et prénom">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Téléphone *</label>
+                        <input type="tel" id="phone" required placeholder="Votre numéro de téléphone">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Adresse du bien (optionnel)</label>
+                        <input type="text" id="address" placeholder="Pour une estimation plus précise">
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 500;">Numéro de téléphone *</label>
-                        <input type="tel" id="phone" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label for="address" style="display: block; margin-bottom: 8px; font-weight: 500;">Adresse du bien à estimer (facultatif)</label>
-                        <input type="text" id="address" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <button type="submit" class="btn" style="width: 100%;">✅ Valider et recevoir mes résultats</button>
+                    <button type="submit" class="btn" id="submitBtn">Recevoir mon bilan personnalisé</button>
                 </form>
                 
                 <div class="privacy-note">
@@ -501,6 +449,10 @@ function submitQuizResults(results) {
     </div>
 
     <script>
+        // Configuration
+        const BACKEND_URL = 'https://quiz-succession-backend.onrender.com/api/trpc/quiz.submit';
+        
+        // État du quiz
         let currentQuestion = 0;
         const answers = {};
 
@@ -511,7 +463,7 @@ function submitQuizResults(results) {
                 implications: "Vous n'êtes pas encore dans une démarche de vente immédiate. Les décisions peuvent être retardées par l'émotionnel. Vous risquez de laisser le bien se dégrader ou de supporter des frais inutiles (taxes, entretien).",
                 message: "Prenez le temps de la réflexion, mais entourez-vous d'informations claires. Un conseiller peut vous aider à poser les bases sans vous mettre sous pression.",
                 cta: "📊 Demandez dès maintenant votre estimation gratuite et sans engagement",
-                ctaAction: "redirectToCalendar()"
+                ctaAction: "redirectToCalendar"
             },
             "Le Médiateur": {
                 emoji: "🤝",
@@ -519,7 +471,7 @@ function submitQuizResults(results) {
                 implications: "Les décisions peuvent être bloquées. Les frais continuent à s'accumuler. Le bien peut se dégrader. Les relations familiales peuvent se détériorer davantage.",
                 message: "Vous avez besoin d'un tiers impartial pour débloquer la situation. Un conseiller spécialisé en succession peut aider à trouver des solutions acceptables pour tous.",
                 cta: "🤝 Trouvez des solutions avec l'aide d'un expert",
-                ctaAction: "bookConsultation()"
+                ctaAction: "bookConsultation"
             },
             "Le Décidé": {
                 emoji: "⚡",
@@ -527,7 +479,7 @@ function submitQuizResults(results) {
                 implications: "Vous êtes prêt(e) à agir, mais vous devez vous assurer que tous les héritiers sont d'accord. Il faut respecter les délais légaux et les formalités.",
                 message: "Agissez avec méthode. Obtenez une estimation professionnelle, préparez les documents, et lancez le processus de vente.",
                 cta: "⚡ Lancez votre processus de vente dès maintenant",
-                ctaAction: "redirectToCalendar()"
+                ctaAction: "redirectToCalendar"
             },
             "Le Prudent": {
                 emoji: "🕐",
@@ -535,62 +487,34 @@ function submitQuizResults(results) {
                 implications: "Vous avez le luxe du temps, mais attention : les frais continuent à s'accumuler (taxes, entretien, assurance). Un bien inoccupé peut se dégrader.",
                 message: "Utilisez ce temps pour vous informer, consulter un expert, et préparer votre stratégie sans précipitation.",
                 cta: "🕐 Planifiez votre succession sereinement",
-                ctaAction: "redirectToCalendar()"
+                ctaAction: "redirectToCalendar"
             }
         };
 
-        function startQuiz() {
-            currentQuestion = 1;
-            updateProgress();
-            showPage('question1');
-        }
-
+        // Fonctions utilitaires
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
-            document.getElementById(pageId).classList.add('active');
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo(0, 0);
+            }
         }
 
         function updateProgress() {
-            const progress = (currentQuestion / 7) * 100;
+            const totalQuestions = 7;
+            const progress = (currentQuestion / totalQuestions) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
-        }
-
-        function selectOption(element, questionNum) {
-            // Désélectionner toutes les options de cette question
-            const options = element.parentNode.querySelectorAll('.option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            
-            // Sélectionner l'option cliquée
-            element.classList.add('selected');
-            
-            // Sauvegarder la réponse
-            answers[`q${questionNum}`] = element.dataset.value;
-            
-            // Activer le bouton suivant
-            document.getElementById(`next${questionNum}`).disabled = false;
-        }
-
-        function nextQuestion(currentNum) {
-            currentQuestion = currentNum + 1;
-            updateProgress();
-            
-            if (currentNum < 7) {
-                showPage(`question${currentNum + 1}`);
-            } else {
-                showPage('contact');
-            }
         }
 
         function calculateProfile() {
             let profile = "Le Cœur partagé"; // Profil par défaut
             
-            // Logique de calcul du profil basée sur les réponses
             const hasDisagreement = answers.q2 === 'disagreement' || answers.q4 === 'divergent';
             const isEmotionallyAttached = answers.q1 === 'attachment' || answers.q6 === 'emotional';
             const wantsQuickSale = answers.q5 === 'quickly' && answers.q1 === 'relief';
-            const hasUrgency = answers.q5 === 'quickly';
             const noUrgency = answers.q5 === 'nohurry';
             
             if (hasDisagreement) {
@@ -608,7 +532,9 @@ function submitQuizResults(results) {
 
         function displayResults(profileName) {
             const profileData = profiles[profileName];
-            document.getElementById('resultContent').innerHTML = `
+            const resultContent = document.getElementById('resultContent');
+            
+            resultContent.innerHTML = `
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; border-left: 5px solid #667eea;">
                     <h3 style="font-size: 1.8rem; margin-bottom: 15px;">${profileData.emoji} ${profileName}</h3>
                     <div style="margin-bottom: 20px; line-height: 1.8;">
@@ -620,63 +546,23 @@ function submitQuizResults(results) {
                             ${profileData.implications}
                         </div>
                     </div>
-                    <div class="result-message"><strong>Conseil adapté :</strong> 👉 ${profileData.message}</div>
-                    <button class="cta-button" onclick="${profileData.ctaAction}" style="margin-top: 15px;">
+                    <div style="margin-bottom: 20px; padding: 15px; background: #eef2ff; border-radius: 10px; color: #4338ca;">
+                        <strong>Conseil adapté :</strong> 👉 ${profileData.message}
+                    </div>
+                    <button class="cta-button" id="finalCtaBtn" style="margin-top: 15px; width: 100%;">
                         ${profileData.cta}
                     </button>
                 </div>
             `;
+
+            // Attacher l'événement au bouton CTA généré dynamiquement
+            document.getElementById('finalCtaBtn').addEventListener('click', () => {
+                if (profileData.ctaAction === 'redirectToCalendar') redirectToCalendar();
+                else if (profileData.ctaAction === 'bookConsultation') bookConsultation();
+            });
         }
 
-        // Gestion du formulaire de contact
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-            
-            // Envoyer les données au backend
-            try {
-                // NOUVEAU Backend Render
-const quizData = {
-    nom: fullName,
-    telephone: phone,
-    adresse: address || null,
-    q1_sentiment: answers.q1 || null,
-    q2_heirs: answers.q2 || null,
-    q3_property_state: answers.q3 || null,
-    q4_family_discussion: answers.q4 || null,
-    q5_timeline: answers.q5 || null,
-    q6_obstacle: answers.q6 || null,
-    q7_consultation: answers.q7 || null,
-    profile: calculateProfile()
-};
-
-const response = await fetch('https://quiz-succession-backend.onrender.com/submit-quiz', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(quizData)
-});
-
-const data = await response.json();
-console.log('✅ Backend OK:', data);
-
-
-            
-            // Calculer et afficher le profil
-            const profile = calculateProfile();
-            displayResults(profile);
-            
-            // Mettre à jour la progress bar à 100%
-            document.getElementById('progressFill').style.width = '100%';
-            
-            // Afficher la page de résultats avec un délai pour l'animation
-            setTimeout(() => {
-                showPage('results');
-            }, 500);
-
-        // Fonctions pour les CTA
+        // Actions
         function redirectToCalendar() {
             window.location.href = 'https://cal.com/lucie-garnier-immobilier/rendez-vous-succession-quiz';
         }
@@ -685,8 +571,100 @@ console.log('✅ Backend OK:', data);
             window.location.href = 'https://cal.com/lucie-garnier-immobilier/rendez-vous-succession-quiz';
         }
 
-        // Initialisation
-        updateProgress();
+        // Initialisation des événements
+        document.addEventListener('DOMContentLoaded', () => {
+            // Bouton de démarrage
+            document.getElementById('startBtn').addEventListener('click', () => {
+                currentQuestion = 1;
+                updateProgress();
+                showPage('question1');
+            });
+
+            // Gestion des options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const parent = this.closest('.options');
+                    const questionNum = this.closest('.page').id.replace('question', '');
+                    
+                    // Désélectionner les autres
+                    parent.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Sélectionner l'actuel
+                    this.classList.add('selected');
+                    
+                    // Sauvegarder la réponse
+                    answers[`q${questionNum}`] = this.dataset.value;
+                    
+                    // Activer le bouton suivant
+                    const nextBtn = this.closest('.page').querySelector('.next-btn');
+                    if (nextBtn) nextBtn.disabled = false;
+                });
+            });
+
+            // Boutons "Suivant"
+            document.querySelectorAll('.next-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const currentNum = parseInt(this.dataset.current);
+                    if (currentNum < 7) {
+                        currentQuestion = currentNum + 1;
+                        updateProgress();
+                        showPage(`question${currentQuestion}`);
+                    } else {
+                        showPage('contact');
+                    }
+                });
+            });
+
+            // Formulaire de contact
+            document.getElementById('contactForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Envoi en cours...';
+                
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+                
+                try {
+                    const response = await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            json: {
+                                fullName: fullName,
+                                phone: phone,
+                                address: address || null,
+                                q1_sentiment: answers.q1 || null,
+                                q2_heirs: answers.q2 || null,
+                                q3_property_state: answers.q3 || null,
+                                q4_family_discussion: answers.q4 || null,
+                                q5_timeline: answers.q5 || null,
+                                q6_obstacle: answers.q6 || null,
+                                q7_consultation: answers.q7 || null
+                            }
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    console.log('Réponse du serveur:', data);
+                } catch (error) {
+                    console.error('Erreur lors de l\'envoi:', error);
+                }
+                
+                // Afficher les résultats même en cas d'erreur d'envoi
+                const profile = calculateProfile();
+                displayResults(profile);
+                document.getElementById('progressFill').style.width = '100%';
+                
+                setTimeout(() => {
+                    showPage('results');
+                }, 500);
+            });
+        });
     </script>
 </body>
 </html>
