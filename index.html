@@ -662,18 +662,7 @@ const response = await fetch('https://quiz-succession-backend.onrender.com/submi
 const data = await response.json();
 console.log('✅ Backend OK:', data);
 
-                
-                // Vérifier si la réponse est correcte
-if (data.success) {
-    console.log('✅ Sauvegardé !');
-} else {
-    console.error('Backend erreur:', data);
-}
 
-                }
-            } catch (error) {
-                console.error('Erreur lors de l\'envoi:', error);
-            }
             
             // Calculer et afficher le profil
             const profile = calculateProfile();
