@@ -664,8 +664,12 @@ console.log('✅ Backend OK:', data);
 
                 
                 // Vérifier si la réponse est correcte
-                if (!data.result || !data.result.data || !data.result.data.success) {
-                    console.error('Erreur lors de l\'envoi des données');
+if (data.success) {
+    console.log('✅ Sauvegardé !');
+} else {
+    console.error('Backend erreur:', data);
+}
+
                 }
             } catch (error) {
                 console.error('Erreur lors de l\'envoi:', error);
