@@ -270,6 +270,37 @@
         }
     </style>
 </head>
+    <script>
+// Configuration backend
+const BACKEND_URL = 'https://quiz-succession-backend.onrender.com';
+
+// Exemple : quand utilisateur soumet le quiz
+function submitQuizResults(results) {
+  // results = { nom: "Lucie", email: "test@test.com", score: 8, reponses: [...] }
+  
+  fetch(`${BACKEND_URL}/submit-quiz`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(results)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('✅ Merci ! Vos résultats sont sauvegardés.');
+    } else {
+      alert('❌ Erreur, réessayez.');
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    alert('❌ Problème connexion, réessayez.');
+  });
+}
+
+// À adapter à ton bouton de soumission existant
+// Ex: document.getElementById('submit-btn').addEventListener('click', submitQuizResults);
+</script>
+
 <body>
     <div class="container">
         <div class="progress-bar">
