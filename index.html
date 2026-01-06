@@ -450,7 +450,7 @@
 
     <script>
         // Configuration
-        const BACKEND_URL = 'https://quiz-succession-backend.onrender.com/api/trpc/quiz.submit';
+        const BACKEND_URL = 'https://quiz-succession-backend.onrender.com/submit-quiz';
         
         // État du quiz
         let currentQuestion = 0;
@@ -626,6 +626,7 @@
                 const fullName = document.getElementById('fullName').value;
                 const phone = document.getElementById('phone').value;
                 const address = document.getElementById('address').value;
+                const profile = calculateProfile();
                 
                 try {
                     const response = await fetch(BACKEND_URL, {
@@ -634,18 +635,11 @@
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            json: {
-                                fullName: fullName,
-                                phone: phone,
-                                address: address || null,
-                                q1_sentiment: answers.q1 || null,
-                                q2_heirs: answers.q2 || null,
-                                q3_property_state: answers.q3 || null,
-                                q4_family_discussion: answers.q4 || null,
-                                q5_timeline: answers.q5 || null,
-                                q6_obstacle: answers.q6 || null,
-                                q7_consultation: answers.q7 || null
-                            }
+                            fullName: fullName,
+                            phone: phone,
+                            address: address || null,
+                            profile: profile,
+                            answers: answers
                         })
                     });
                     
@@ -655,8 +649,7 @@
                     console.error('Erreur lors de l\'envoi:', error);
                 }
                 
-                // Afficher les résultats même en cas d'erreur d'envoi
-                const profile = calculateProfile();
+                // Afficher les résultats
                 displayResults(profile);
                 document.getElementById('progressFill').style.width = '100%';
                 
