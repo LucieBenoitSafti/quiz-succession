@@ -638,29 +638,30 @@ function submitQuizResults(results) {
             
             // Envoyer les données au backend
             try {
-                const response = await fetch('https://3000-ii2seqp9tho7x050j9483-eb847b98.us2.manus.computer/api/trpc/quiz.submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        json: {
-                            fullName: fullName,
-                            phone: phone,
-                            address: address || null,
-                            q1_sentiment: answers.q1 || null,
-                            q2_heirs: answers.q2 || null,
-                            q3_property_state: answers.q3 || null,
-                            q4_family_discussion: answers.q4 || null,
-                            q5_timeline: answers.q5 || null,
-                            q6_obstacle: answers.q6 || null,
-                            q7_consultation: answers.q7 || null
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                console.log('Réponse du serveur:', data);
+                // NOUVEAU Backend Render
+const quizData = {
+    nom: fullName,
+    telephone: phone,
+    adresse: address || null,
+    q1_sentiment: answers.q1 || null,
+    q2_heirs: answers.q2 || null,
+    q3_property_state: answers.q3 || null,
+    q4_family_discussion: answers.q4 || null,
+    q5_timeline: answers.q5 || null,
+    q6_obstacle: answers.q6 || null,
+    q7_consultation: answers.q7 || null,
+    profile: calculateProfile()
+};
+
+const response = await fetch('https://quiz-succession-backend.onrender.com/submit-quiz', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(quizData)
+});
+
+const data = await response.json();
+console.log('✅ Backend OK:', data);
+
                 
                 // Vérifier si la réponse est correcte
                 if (!data.result || !data.result.data || !data.result.data.success) {
